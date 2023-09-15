@@ -37,7 +37,7 @@ const arrayAtom = atom<any[]>({
 const sel = selector({
   key: "sel",
   get({ get }) {
-    return get(arrayAtom)
+    return get(arrayAtom).map((item) => `${item} (!!!)`)
   },
 })
 
