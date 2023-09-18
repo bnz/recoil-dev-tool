@@ -6,13 +6,15 @@ import cx from "classnames"
 
 import ArrowRightIcon from "./assets/arrow-right.svg"
 import ArrowBottomIcon from "./assets/arrow-bottom.svg"
+import CloseIcon from "./assets/close.svg"
 import { RenderValue } from "./RenderValue"
 
 export function DebugObserver() {
     const snapshot = useRecoilSnapshot()
     const [data, setData] = useState<Record<any, { type: any, value: any }>>({})
-
     const [toggle, setToggle] = useState<Record<string, any>>({})
+    const [debugVisible, setDebugVisible] = useState(false)
+    const [settingsVisible, setSettingsVisible] = useState(true)
 
     const onClick = useRecoilCallback(({ snapshot }) => async () => {
         const res: Record<any, { type: any, value: any }> = {}
@@ -42,9 +44,28 @@ export function DebugObserver() {
         <div className={cx(
             "border border-[var(--line-color)]",
             "fixed bottom-10 left-1",
-            "rounded shadow-2xl max-w-fit min-w-[50%] z-40 bg-[var(--background-color)]",
+            "rounded-xl shadow-2xl max-w-fit min-w-[50%] z-40 bg-[var(--background-color)]",
+            "overflow-hidden",
         )}>
-            <div className="border-b border-[var(--line-color)]">asd</div>
+            <header className="border-b border-[var(--line-color)] flex">
+                <div className="flex-1 italic">recoil.js?DevTools</div>
+                <button
+                    className="text-gray-500 border-0 border-l border-l-[var(--line-color)] px-2"
+                    onClick={() => {
+
+                    }}
+                >
+                    settings
+                </button>
+                <button
+                    className="text-gray-500 border-0 border-l border-l-[var(--line-color)] px-2"
+                    onClick={() => {
+                        setDebugVisible((prev) => !prev)
+                    }}
+                >
+                    {debugVisible ? "hide" : "show"}
+                </button>
+            </header>
             <pre className="p-2">
                 {Object.keys(data).map((key) => {
                     const { value, type } = data[key]
@@ -86,6 +107,32 @@ export function DebugObserver() {
                     )
                 })}
             </pre>
+            {settingsVisible && (
+                <div className="absolute inset-0 bg-black/30 backdrop-blur-sm">
+                    <div className="absolute inset-5 bg-[var(--background-color)] rounded-xl">
+                        <header
+                            className="outline flex"
+
+                        >
+                            <header className="flex">
+                                <div className="flex-1">
+                                    Settings
+                                </div>
+                                <button
+                                    className={cx(
+                                        "bg-no-repeat",
+                                        "w-6 h-6",
+                                        "outline",
+                                    )}
+                                    style={{
+                                        backgroundImage: `url(${CloseIcon})`,
+                                    }}
+                                />
+                            </header>
+                        </header>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
