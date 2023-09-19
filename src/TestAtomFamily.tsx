@@ -8,7 +8,8 @@ const boolAtomFamily = atomFamily<boolean, string>({
 })
 
 export const TestAtomFamily: FC = () => {
-  const [bools, setBools] = useRecoilState(boolAtomFamily("001"))
+  const [bools, setBools] = useRecoilState(boolAtomFamily("bonez"))
+  const [bools2, setBools2] = useRecoilState(boolAtomFamily("0001"))
 
   return (
     <>

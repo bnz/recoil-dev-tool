@@ -14,7 +14,7 @@ export function DebugObserver() {
     const [data, setData] = useState<Record<any, { type: any, value: any }>>({})
     const [toggle, setToggle] = useState<Record<string, any>>({})
     const [debugVisible, setDebugVisible] = useState(false)
-    const [settingsVisible, setSettingsVisible] = useState(true)
+    const [settingsVisible, setSettingsVisible] = useState(false)
 
     const onClick = useRecoilCallback(({ snapshot }) => async () => {
         const res: Record<any, { type: any, value: any }> = {}
@@ -51,9 +51,7 @@ export function DebugObserver() {
                 <div className="flex-1 italic">recoil.js?DevTools</div>
                 <button
                     className="text-gray-500 border-0 border-l border-l-[var(--line-color)] px-2"
-                    onClick={() => {
-
-                    }}
+                    onClick={() => setSettingsVisible(true)}
                 >
                     settings
                 </button>
@@ -78,6 +76,22 @@ export function DebugObserver() {
                     }
 
                     const props = hover ? { onClick } : {}
+
+                    if (/([A-Za-z0-9].*)(_{2})"([A-Za-z0-9].*)"/.test(key)) {
+
+                        const [name] = key.split("__")
+
+                        console.log({ name })
+
+                        // return (
+                        //     <div key={key} className={cx(
+                        //         "p-1 hover:bg-black/5 dark:hover:bg-black/10 rounded transition-colors duration-75",
+                        //         toggle[key] ? "grid grid-cols-[16px_1fr]" : "flex items-center",
+                        //     )}>
+                        //         {key}
+                        //     </div>
+                        // )
+                    }
 
                     return (
                         <div key={key} className={cx(
@@ -109,27 +123,27 @@ export function DebugObserver() {
             </pre>
             {settingsVisible && (
                 <div className="absolute inset-0 bg-black/30 backdrop-blur-sm">
-                    <div className="absolute inset-5 bg-[var(--background-color)] rounded-xl">
-                        <header
-                            className="outline flex"
-
-                        >
-                            <header className="flex">
-                                <div className="flex-1">
-                                    Settings
-                                </div>
-                                <button
-                                    className={cx(
-                                        "bg-no-repeat",
-                                        "w-6 h-6",
-                                        "outline",
-                                    )}
-                                    style={{
-                                        backgroundImage: `url(${CloseIcon})`,
-                                    }}
-                                />
-                            </header>
+                    <div className="absolute inset-5 bg-[var(--background-color)] rounded-xl shadow">
+                        <header className="flex border-b p-2">
+                            <div className="flex-1">
+                                Settings
+                            </div>
+                            <button
+                                className={cx(
+                                    "bg-no-repeat",
+                                    "w-6 h-6",
+                                )}
+                                style={{
+                                    backgroundImage: `url(${CloseIcon})`,
+                                }}
+                                onClick={() => setSettingsVisible(false)}
+                            />
                         </header>
+                        <div className="p-2">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab adipisci asperiores atque culpa
+                            dolore dolores eius et libero maxime nam odio omnis, placeat, possimus praesentium
+                            repellendus repudiandae temporibus totam voluptas.
+                        </div>
                     </div>
                 </div>
             )}
