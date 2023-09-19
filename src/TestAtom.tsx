@@ -34,7 +34,7 @@ const arrayAtom = atom<any[]>({
   default: [],
 })
 
-const sel = selector({
+selector({
   key: "sel",
   get({ get }) {
     return get(arrayAtom).map((item) => `${item} (${get(numberAtom)})`)

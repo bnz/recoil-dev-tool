@@ -52,7 +52,7 @@ export const RenderValue: FC<RenderValueProps> = ({ value, toggle, setToggle, ty
                         )
                     } else {
 
-                        console.log(value)
+                        // console.log(value)
 
                         return (
                             <span className="text-[#d9864e] dark:text-[rgba(222,175,143,.9)] col-span-2 ml-8">
