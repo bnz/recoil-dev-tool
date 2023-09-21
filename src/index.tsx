@@ -1,10 +1,8 @@
-// import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client'
-// import { Tree } from './Tree';
 import './index.css'
 import reportWebVitals from './reportWebVitals'
 import { RecoilRoot } from 'recoil'
-import { DebugObserver } from './DebugObserver'
+import { DataProvider, DebugObserver } from './DebugObserver'
 import { TestAtom } from './TestAtom'
 import { DebugButton } from './DebugButton'
 import { TestAtomFamily } from './TestAtomFamily'
@@ -22,7 +20,9 @@ createRoot(
                 <TestAtomFamily />
             </div>
             <InitThemeChangeWatch />
-            <DebugObserver />
+            <DataProvider>
+                <DebugObserver />
+            </DataProvider>
         </RecoilRoot>
     </>,
 )

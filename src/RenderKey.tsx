@@ -1,7 +1,9 @@
-import type { FC } from "react"
-import cx from "classnames"
+import cx from "cx"
 import ArrowBottomIcon from "./assets/arrow-bottom.svg"
 import ArrowRightIcon from "./assets/arrow-right.svg"
+import { useRecoilValue } from "recoil"
+
+import { fontSize } from "./recoiljs/fontSize"
 
 interface RenderKeyProps {
     theKey: string
@@ -11,7 +13,9 @@ interface RenderKeyProps {
     onClick?(): void
 }
 
-export const RenderKey: FC<RenderKeyProps> = ({ toggle, theKey, hover, type, onClick }) => {
+export function RenderKey({ toggle, theKey, hover, type, onClick }: RenderKeyProps) {
+    const size = useRecoilValue(fontSize)
+
     return (
         <>
             <div
@@ -27,6 +31,7 @@ export const RenderKey: FC<RenderKeyProps> = ({ toggle, theKey, hover, type, onC
             <div
                 onClick={onClick}
                 className={cx(
+                    size,
                     "text-blue-500 mr-1 after:content-[':'] relative",
                     hover && "cursor-pointer",
                     type === "Selector" && "underline underline-offset-2",

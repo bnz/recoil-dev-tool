@@ -1,5 +1,8 @@
-import type { Dispatch, FC, SetStateAction } from "react"
+import type { Dispatch, SetStateAction } from "react"
 import { Fragment } from "react"
+import { useRecoilValue } from "recoil"
+import cxx from "cx"
+import { fontSize } from "./recoiljs/fontSize"
 
 interface RenderValueProps {
     type: any
@@ -8,30 +11,36 @@ interface RenderValueProps {
     setToggle: Dispatch<SetStateAction<Record<string, any>>>
 }
 
-export const RenderValue: FC<RenderValueProps> = ({ value, toggle, setToggle, type }) => {
+export function RenderValue({ value, toggle, setToggle, type }: RenderValueProps) {
+    const size = useRecoilValue(fontSize)
+
+    function cx(...props: string[]): string {
+        return cxx(size, ...props)
+    }
+
     switch (typeof value) {
         case 'boolean':
             return (
-                <span className="text-orange-500">
+                <span className={cx("text-orange-500")}>
                     {value ? "true" : "false"}
                 </span>
             )
         case 'string':
             return (
-                <span className="text-green-500">"{value}"</span>
+                <span className={cx("text-green-500")}>"{value}"</span>
             )
         case 'number':
             return (
-                <span className="text-orange-400">{value}</span>
+                <span className={cx("text-orange-400")}>{value}</span>
             )
         case 'undefined':
             return (
-                <span className="text-gray-500">undefined</span>
+                <span className={cx("text-gray-500")}>undefined</span>
             )
         case 'object':
             if (value === null) {
                 return (
-                    <span className="text-gray-500">null</span>
+                    <span className={cx("text-gray-500")}>null</span>
                 )
             } else {
                 if (toggle) {
@@ -39,23 +48,26 @@ export const RenderValue: FC<RenderValueProps> = ({ value, toggle, setToggle, ty
                         return (
                             <span
                                 className="text-[#d9864e] dark:text-[rgba(222,175,143,.9)] col-span-2 grid grid-cols-[52px_1fr]">
-                                {value.map((item, index) => (
-                                    <Fragment key={index}>
-                                        <span className="text-right text-blue-500 after:content-[':'] after:mr-1">
-                                            {index}
-                                        </span>
-                                        <RenderValue value={item} type="" toggle={false} setToggle={() => {
-                                        }} />
-                                    </Fragment>
-                                ))}
+                                {value.map(function ValueMap(item, index) {
+                                    return (
+                                        <Fragment key={index}>
+                                            <span className={cx(
+                                                "text-right text-blue-500 after:content-[':'] after:mr-1",
+                                            )}>
+                                                {index}
+                                            </span>
+                                            <RenderValue value={item} type="" toggle={false} setToggle={function () {
+                                            }} />
+                                        </Fragment>
+                                    )
+                                })}
                             </span>
                         )
                     } else {
-
-                        // console.log(value)
-
                         return (
-                            <span className="text-[#d9864e] dark:text-[rgba(222,175,143,.9)] col-span-2 ml-8">
+                            <span className={cx(
+                                "text-[#d9864e] dark:text-[rgba(222,175,143,.9)] col-span-2 ml-8",
+                            )}>
                                 {JSON.stringify(value, null, 2)}
                                 {/*<RenderValue value={value} type="" toggle={false} setToggle={() => {*/}
                                 {/*}} />*/}
@@ -64,14 +76,17 @@ export const RenderValue: FC<RenderValueProps> = ({ value, toggle, setToggle, ty
                     }
                 } else if (!Object.keys(value).length) {
                     return (
-                        <pre className="text-[#d9864e] dark:text-[rgba(222,175,143,.9)]">
+                        <pre className={cx("text-[#d9864e] dark:text-[rgba(222,175,143,.9)]")}>
                             {JSON.stringify(value, null, 2)}
                         </pre>
                     )
                 } else {
                     return (
                         <pre
-                            className="text-[#d9864e] dark:text-[rgba(222,175,143,.9)] text-ellipsis overflow-hidden cursor-pointer"
+                            className={cx(
+                                "text-[#d9864e] dark:text-[rgba(222,175,143,.9)] text-ellipsis",
+                                "overflow-hidden cursor-pointer",
+                            )}
                             title={JSON.stringify(value, null, 2)}
                             onClick={setToggle}
                         >

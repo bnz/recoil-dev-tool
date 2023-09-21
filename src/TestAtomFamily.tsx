@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 import { atomFamily, useRecoilState } from 'recoil'
-import { Cell } from './Cell'
+import { Cell } from './testing/Cell'
 
 const boolAtomFamily = atomFamily<boolean, string>({
     key: "bools",

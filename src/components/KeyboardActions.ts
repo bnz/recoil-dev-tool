@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useEffect } from 'react'
+import { useEffect } from 'react'
 
 type KeyCodes =
     | 'AltLeft'
@@ -130,9 +130,9 @@ interface KeyboardActionsProps {
     target?: any
 }
 
-export const KeyboardActions: FC<KeyboardActionsProps> = ({ actions, target = window }) => {
-    useEffect(() => {
-        const fn = (e: KeyboardEvent): void => {
+export function KeyboardActions({ actions, target = window }: KeyboardActionsProps) {
+    useEffect(function keyboardActionsUseEffect() {
+        function fn(e: KeyboardEvent): void {
             if (typeof actions[e.code as KeyCodes] === "function") {
                 // @ts-ignore
                 actions[e.code as KeyCodes](e)
@@ -141,7 +141,7 @@ export const KeyboardActions: FC<KeyboardActionsProps> = ({ actions, target = wi
 
         target.addEventListener('keyup', fn, true)
 
-        return () => {
+        return function KeyboardActionsReturn() {
             target.removeEventListener('keyup', fn, true)
         }
     }, [])

@@ -1,36 +1,39 @@
 import { atom, useRecoilValue, useSetRecoilState } from "recoil"
-import { FC, useEffect } from "react"
+import { useEffect } from "react"
 
 export type Themes = "dark" | "light"
 
-const fn = (e: any): Themes => e.matches ? "dark" : "light"
+function fn(e: any): Themes {
+    return e.matches ? "dark" : "light"
+}
 
-export const themeKey = "bnz__theme"
+export const keyPrefix = "bnz__"
 
 const theme = atom<Themes>({
-    key: themeKey,
+    key: `${keyPrefix}theme`,
     default: window.matchMedia ? fn(window.matchMedia("(prefers-color-scheme: dark)")) : "light",
 })
 
-export const InitThemeChangeWatch: FC = () => {
+export function InitThemeChangeWatch() {
     const setState = useSetRecoilState(theme)
 
-    useEffect(() => {
+    useEffect(function InitThemeChangeWatchEffect() {
         const MediaQueryList = window.matchMedia('(prefers-color-scheme: dark)')
 
         if (MediaQueryList.matches) {
             setState("dark")
         }
 
-        MediaQueryList.addEventListener('change', (event) => {
+        MediaQueryList.addEventListener('change', function change(event) {
             setState(fn(event))
         })
+
     }, [setState])
 
     return null
 }
 
-export const useTheme = (isDark?: boolean) => {
+export function useTheme(isDark?: boolean) {
     const t = useRecoilValue(theme)
 
     if (isDark) {
