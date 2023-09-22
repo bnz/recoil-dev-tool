@@ -39,6 +39,7 @@ export function FilterInput({ target }: FilterInputProps) {
                     "focus:placeholder:text-[var(--text-color-disabled)]",
                     "placeholder-shown:cursor-pointer cursor-auto focus:cursor-auto",
                     "placeholder-shown:bg-transparent bg-[var(--line-color-focus)] focus:bg-[var(--line-color-focus)]",
+                    "placeholder-shown:shadow-none shadow-inner focus:shadow-inner",
                     "pr-6 placeholder-shown:pr-0 focus:pr-6",
                 )}
             />

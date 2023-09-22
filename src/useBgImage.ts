@@ -1,7 +1,7 @@
 import { CSSProperties } from "react"
 import { useTheme } from "./useTheme"
 
-export function useBgImage(name: string, asIcon = true): CSSProperties {
+export function useBgImage(name: string, asIcon = true, additionalStyles?: CSSProperties): CSSProperties {
     const isDark = useTheme(true)
     const url = require(`./assets/${name}${isDark ? "-white" : ""}.svg`)
     return {
@@ -13,5 +13,6 @@ export function useBgImage(name: string, asIcon = true): CSSProperties {
             width: 6 * 4,
             height: 6 * 4,
         } : {}),
+        ...(additionalStyles ? additionalStyles : {}),
     }
 }

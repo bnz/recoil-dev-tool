@@ -1,11 +1,18 @@
-import { useRecoilState } from "recoil"
-import { fontSize, FontSizeEnum } from "../../recoiljs/fontSize"
 import { InputRadio } from "../InputRadio"
+import { useData } from "../../DataProvider"
+
+export enum FontSizeEnum {
+    textXs = "text-xs",
+    textSm = "text-sm",
+    textBase = "text-base",
+    textLg = "text-lg",
+    textXl = "text-2xl",
+}
 
 const sizes = Object.values(FontSizeEnum)
 
 export function FontSize() {
-    const [size, setSize] = useRecoilState(fontSize)
+    const { fontSize, setFontSize } = useData()
 
     return (
         <div className="flex gap-1 select-none items-center">
@@ -15,10 +22,10 @@ export function FontSize() {
                         key={key}
                         name="fontSize"
                         value={++index}
-                        defaultChecked={key === size}
+                        defaultChecked={key === fontSize}
                         className={key}
                         onClick={function onClick() {
-                            setSize(key as FontSizeEnum)
+                            setFontSize(key)
                         }}
                     />
                 )

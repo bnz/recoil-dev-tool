@@ -23,6 +23,9 @@
     "paths": {
       "cx": [
         "./cx.ts"
+      ],
+      "@icons/*": [
+        "./assets/*"
       ]
     }
   },

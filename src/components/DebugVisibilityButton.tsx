@@ -1,16 +1,15 @@
 import { useBgImage } from "../useBgImage"
-import { useSetRecoilState } from "recoil"
-import { debugVisibility } from "../recoiljs/debugVisibility"
 import { useCallback } from "react"
+import { useData } from "../DataProvider"
 
 export function DebugVisibilityButton() {
-    const setVisibility = useSetRecoilState(debugVisibility)
+    const { setFlags } = useData()
 
     return (
         <button
             onClick={useCallback(function toggle() {
-                setVisibility(false)
-            }, [setVisibility])}
+                setFlags("debug")
+            }, [setFlags])}
             style={useBgImage("close")}
             title="Hide"
         />

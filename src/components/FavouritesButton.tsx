@@ -1,17 +1,19 @@
 import { useBgImage } from "../useBgImage"
-import { useRecoilState } from "recoil"
-import { favoriteOnly } from "../recoiljs/favoriteOnly"
 import { useCallback } from "react"
+import { useData } from "../DataProvider"
+import cx from "cx"
 
 export function FavouritesButton() {
-    const [favorite, setFavorite] = useRecoilState(favoriteOnly)
+    const { flags: { favourites }, setFlags } = useData()
     const toggle = useCallback(function toggle() {
-        setFavorite(function (prev) {
-            return !prev
-        })
-    }, [setFavorite])
+        setFlags("favourites")
+    }, [setFlags])
 
     return (
-        <button style={useBgImage(favorite ? "star-fill" : "star")} onClick={toggle} />
+        <button
+            className={cx(favourites && "bg-black/5 rounded shadow-inner")}
+            style={useBgImage(favourites ? "star-fill" : "star")}
+            onClick={toggle}
+        />
     )
 }

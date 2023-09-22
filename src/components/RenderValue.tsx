@@ -1,8 +1,7 @@
 import type { Dispatch, SetStateAction } from "react"
 import { Fragment } from "react"
-import { useRecoilValue } from "recoil"
 import cxx from "cx"
-import { fontSize } from "./recoiljs/fontSize"
+import { useData } from "../DataProvider"
 
 interface RenderValueProps {
     type: any
@@ -12,7 +11,7 @@ interface RenderValueProps {
 }
 
 export function RenderValue({ value, toggle, setToggle, type }: RenderValueProps) {
-    const size = useRecoilValue(fontSize)
+    const { fontSize: size } = useData()
 
     function cx(...props: string[]): string {
         return cxx(size, ...props)

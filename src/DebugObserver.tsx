@@ -1,31 +1,12 @@
-import { useRecoilCallback, useRecoilSnapshot, useRecoilState, useRecoilValue } from 'recoil'
-import { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from 'react'
+import { useRecoilCallback, useRecoilSnapshot } from 'recoil'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import cx from "cx"
-import { paddings } from "./recoiljs/paddings"
-import { allData } from "./recoiljs/allData"
-import { allDataSorted } from "./recoiljs/allDataSorted"
 import { MainHeader } from "./components/MainHeader"
-import { settingsVisibility } from "./recoiljs/settingsVisibility"
-import { RenderKey } from "./RenderKey"
-import { RenderValue } from "./RenderValue"
+import { RenderKey } from "./components/RenderKey"
+import { RenderValue } from "./components/RenderValue"
 import { Settings } from "./components/Settings"
-import { createContext, PropsWithChildren } from "react"
-
-type Data = Record<string, Item>
-
-const DataContext = createContext<[
-    data: Record<string, Item>,
-    setData: Dispatch<SetStateAction<Data>>
-]>([{}, function SetData() {
-}])
-
-export function DataProvider({ children }: PropsWithChildren) {
-    return (
-        <DataContext.Provider value={useState<Data>({})}>
-            {children}
-        </DataContext.Provider>
-    )
-}
+import { useData } from "./DataProvider"
+import { PositionEnum } from "./components/options/Positions"
 
 export interface Item {
     type: any
@@ -39,11 +20,16 @@ export interface Item {
 //      bottom-right
 
 export function DebugObserver() {
-    const [data, setData] = useContext(DataContext)
+    const {
+        data,
+        setData,
+        sortedKeys: [atoms, selectors],
+        flags: { settings, sticky },
+        flags,
+        paddings: p,
+        position,
+    } = useData()
     const [toggle, setToggle] = useState<Record<string, any>>({})
-    const [settingsVisible, setSettingsVisible] = useRecoilState(settingsVisibility)
-
-    console.log(data)
 
     const onClick = useRecoilCallback(function fn({ snapshot }) {
         return async function Async() {
@@ -73,9 +59,7 @@ export function DebugObserver() {
     useEffect(function UseEffect() {
         const res: Record<string, Item> = {}
         // @ts-ignore
-        for (const node of snapshot.getNodes_UNSTABLE({ isModified: true })) {
-            // console.debug(node.key, snapshot.getLoadable(node))
-
+        for (const node of snapshot.getNodes_UNSTABLE({ /* isModified: true */ })) {
             if (!/^bnz__/igm.test(node.key)) {
                 res[node.key] = {
                     type: node.constructor.name === "RecoilState"
@@ -87,48 +71,70 @@ export function DebugObserver() {
                 }
             }
         }
-
         setData(res)
     }, [snapshot, setData])
 
-    const [atoms, selectors, atomFamilies] = useRecoilValue(allDataSorted)
-
-    // console.log({ atomFamilies })
-    console.log("!")
-
     const ref = useRef<HTMLDivElement | null>(null)
 
-    const p = useRecoilValue(paddings)
+    const stylesMap = useMemo<Record<PositionEnum, string>>(function StylesMap(){
+        return {
+            [PositionEnum.topRight]: cx(
+                sticky ? "top-0 right-0 rounded-tr-none rounded-tl-none rounded-br-none" : "top-5 right-5",
+                "w-1/2 h-1/2",
+            ),
+            [PositionEnum.topLeft]: cx(
+                sticky ? "top-0 left-0 rounded-tr-none rounded-tl-none rounded-bl-none" : "top-5 left-5",
+                "w-1/2 h-1/2",
+            ),
+            [PositionEnum.bottomRight]: cx(
+                sticky ? "bottom-0 right-0 rounded-tr-none rounded-br-none rounded-bl-none" : "bottom-5 right-5",
+                "w-1/2 h-1/2",
+            ),
+            [PositionEnum.bottomLeft]: cx(
+                sticky ? "bottom-0 left-0 rounded-tl-none rounded-bl-none rounded-br-none" : "bottom-5 left-5",
+                "w-1/2 h-1/2",
+            ),
+        }
+    }, [sticky])
 
     return (
         <div tabIndex={0} ref={ref} className={cx(
-            !settingsVisible && "border border-[var(--line-color)]",
-            "fixed bottom-10 left-2 right-2",
-            "rounded-xl shadow-2xl z-40 bg-[var(--background-color)]",
+            "text-[var(--text-color)] bg-[var(--background-color)]",
+            "fixed",
+            stylesMap[position],
+
+            "rounded-xl shadow-2xl z-40",
             "overflow-hidden",
 
-            "max-h-[50vh]",
+            "transition-all", // <- REMOVE ME !!!
 
-            "focus-within:outline",
-            "focus-within:outline-4",
-            "focus-within:outline-[var(--line-color-focus)]",
-            "focus-within:outline-offset-4",
+            // "focus-within:outline",
+            // "focus-within:outline-4",
+            // "focus-within:outline-[var(--line-color-focus)]",
+            // "focus-within:outline-offset-4",
+
+            "grid", settings ? "grid-rows-[30px_90px_1fr]" : "grid-rows-[30px_0_1fr]",
         )}>
             <MainHeader target={ref.current} />
-            {settingsVisible && (
-                <Settings />
-            )}
-            <pre className="p-2">
+            <section className={cx(
+                "border-b border-[var(--line-color)]",
+                "bg-black/5",
+                "overflow-hidden",
+                "transition-all",
+                "shadow-sm",
+            )}>
+                {settings && (
+                    <Settings />
+                )}
+            </section>
+            <pre className="p-2 overflow-auto">
                 {[...atoms, ...selectors].map(function AtomsMap(key) {
                     const { value, type } = data[key]
                     const hover = typeof value === "object" && value !== null && Object.keys(value).length > 0
 
                     function onClick() {
                         setToggle(function Updater(prev) {
-                            return {
-                                ...prev,
-                                [key]: !prev[key],
-                            }
+                            return { ...prev, [key]: !prev[key] }
                         })
                     }
 

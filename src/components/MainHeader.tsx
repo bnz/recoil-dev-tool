@@ -10,13 +10,14 @@ interface MainHeaderProps {
 
 export function MainHeader({ target }: MainHeaderProps) {
     return (
-        <header className="border-b border-[var(--line-color)] flex items-center px-1 gap-2 py-1">
+        <header className="flex items-center px-1 gap-1 py-1 shadow-sm">
             <div className="flex-1">
                 <Logo />
             </div>
             <FilterInput target={target} />
             <FavouritesButton />
             <SettingsButton />
+            <div className="w-[1px] h-6 bg-[var(--line-color)]" />
             <DebugVisibilityButton />
         </header>
     )

@@ -6,6 +6,7 @@
     --background-color: rgba(247, 248, 251, 1);
     --text-color: rgba(0, 32, 51, 1);
     --text-color-disabled: rgba(0, 32, 51, .25);
+    --text-color-selected: rgba(0, 32, 51, .1);
     --line-color: rgba(0, 32, 51, .05);
     --line-color-focus: rgba(0, 32, 51, .075);
 }
@@ -15,6 +16,7 @@
         --background-color: rgba(57, 57, 61, 1);
         --text-color: rgba(255, 255, 255, 0.8);
         --text-color-disabled: rgba(255, 255, 255, 0.25);
+        --text-color-selected: rgba(255, 255, 255, 0.1);
         --line-color: rgba(255, 255, 255, 0.025);
         --line-color-focus: rgba(255, 255, 255, 0.2);
     }
@@ -34,8 +36,8 @@ body {
 
     position: relative;
 
-    background-color: var(--background-color);
-    color: var(--text-color);
+    /*background-color: var(--background-color);*/
+    /*color: var(--text-color);*/
 }
 
 code {

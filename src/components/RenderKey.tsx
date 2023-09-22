@@ -1,9 +1,7 @@
 import cx from "cx"
-import ArrowBottomIcon from "./assets/arrow-bottom.svg"
-import ArrowRightIcon from "./assets/arrow-right.svg"
-import { useRecoilValue } from "recoil"
-
-import { fontSize } from "./recoiljs/fontSize"
+import ArrowBottomIcon from "../assets/arrow-bottom.svg"
+import ArrowRightIcon from "../assets/arrow-right.svg"
+import { useData } from "../DataProvider"
 
 interface RenderKeyProps {
     theKey: string
@@ -14,7 +12,7 @@ interface RenderKeyProps {
 }
 
 export function RenderKey({ toggle, theKey, hover, type, onClick }: RenderKeyProps) {
-    const size = useRecoilValue(fontSize)
+    const { fontSize: size } = useData()
 
     return (
         <>
